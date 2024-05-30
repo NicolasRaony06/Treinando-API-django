@@ -1,4 +1,4 @@
 total_vendas/venv/*
 total_vendas/sqlite
-livros/venv/*
-livros/sqlite
+livros-CRUD/venv/*
+livros-CRUD/sqlite
