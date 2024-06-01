@@ -2,3 +2,4 @@ total_vendas/venv/*
 total_vendas/sqlite
 livros-CRUD/venv/*
 livros-CRUD/sqlite
+API-CRUD-django/venv/*
