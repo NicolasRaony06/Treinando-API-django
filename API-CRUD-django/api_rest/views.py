@@ -53,4 +53,17 @@ def user_manager(request):
             
         except:                                                        #Caso a url seja passada com um parâmetro errado, retorna http 400
             return Response(status=status.HTTP_400_BAD_REQUEST)
+    
+    if request.method == 'POST':
+
+        novo_user = request.data
+
+        serializer = UserSerializer(data=novo_user)
+
+        if serializer.is_valid():
+            serializer.save()
+
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         
+        return Response(status=status.HTTP_400_BAD_REQUEST)    
+
