@@ -57,6 +57,7 @@ def user_manager(request):
     if request.method == 'POST':
 
         novo_user = request.data
+        print(request.data)
 
         serializer = UserSerializer(data=novo_user)
 
@@ -67,3 +68,19 @@ def user_manager(request):
         
         return Response(status=status.HTTP_400_BAD_REQUEST)    
 
+    if request.method == 'PUT':
+        try:
+            nickname = request.data['nickname']
+        except:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        changed_user = User.objects.get(pk=nickname)
+
+        serializer = UserSerializer(changed_user, data=request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+
+            return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
+        
+        return Response(status=status.HTTP_400_BAD_REQUEST)
