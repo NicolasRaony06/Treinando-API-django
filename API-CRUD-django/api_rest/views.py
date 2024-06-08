@@ -94,3 +94,11 @@ def user_manager(request):
             return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
         
         return Response(status=status.HTTP_400_BAD_REQUEST)
+    
+    if request.method == 'DELETE':
+        try:
+            deleted_user = User.objects.get(pk=request.data['nickname'])
+            deleted_user.delete()
+            return Response(status=status.HTTP_202_ACCEPTED)
+        except:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
