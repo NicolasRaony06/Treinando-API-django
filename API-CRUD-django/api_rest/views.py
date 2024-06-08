@@ -37,7 +37,7 @@ def get_user_by_nickname(request, nickname):
 def user_manager(request):
     if request.method == 'GET':  
         try:                                                           #Tenta com a url /?user=algumvalor
-            if request.GET['user']:                                    #Checar se request.GET['user'] não está recebendo um valor None
+            if request.GET['user']:                                  #Checar se request.GET['user'] não está recebendo um valor None
                 nickname = request.GET['user']
  
                 try:
@@ -74,8 +74,11 @@ def user_manager(request):
         except:
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
-        changed_user = User.objects.get(pk=nickname)
-
+        try:
+            changed_user = User.objects.get(pk=nickname)
+        except:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        
         serializer = UserSerializer(changed_user, data=request.data)
 
         if serializer.is_valid():
