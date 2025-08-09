@@ -6,7 +6,7 @@ from rest_framework import status
 from .serializers import ProdutoSerializer
 from .models import Produto
 
-@api_view(['GET', 'POST', 'PUT'])
+@api_view(['GET', 'POST', 'PUT', 'DELETE'])
 def produtos_api(request):
     if request.method == "GET":
         produtos = Produto.objects.all()
@@ -44,6 +44,19 @@ def produtos_api(request):
             return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
         
         return Response(status=status.HTTP_400_BAD_REQUEST)
+    
+    if request.method == 'DELETE':
+        try:
+            produto_id = request.data["id"]
+        except:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            produto = Produto.objects.get(id=produto_id)
+            produto.delete()
+            return Response(status=status.HTTP_202_ACCEPTED)
+        except:
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
 
 
