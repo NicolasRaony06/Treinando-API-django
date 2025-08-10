@@ -4,7 +4,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from .serializers import ProdutoSerializer
-from .models import Produto
+from .models import Produto, Venda, ItemVenda
 
 @api_view(['GET', 'POST', 'PUT', 'DELETE'])
 def produtos_api(request):
@@ -57,6 +57,63 @@ def produtos_api(request):
             return Response(status=status.HTTP_202_ACCEPTED)
         except:
             return Response(status=status.HTTP_404_NOT_FOUND)
+
+@api_view(['POST'])
+def comprar_produtos(request):
+    if request.method == 'POST':
+        try:
+            produtos_id = request.data["produtos_id"]
+            quantidade = request.data["quantidade"]
+        except:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        
+        if produtos_id:
+            valor_total = 0
+            for index, produto_id in enumerate(produtos_id):
+                try:
+                    produto = Produto.objects.get(id=produto_id)
+                except:
+                    return Response(status=status.HTTP_404_NOT_FOUND)
+                
+                if produto.ativo:
+                    try: 
+                        qtd_produto = quantidade[index]
+                    except:
+                        return Response(status=status.HTTP_400_BAD_REQUEST)
+                    
+                    venda = Venda.objects.create()
+
+                    item = ItemVenda.objects.create(
+                        venda = venda,
+                        produto = produto,
+                        qtd_produto=qtd_produto,
+                        preco_und=produto.preco
+                    )
+
+                    if qtd_produto <= produto.qtd_estoque:
+                        produto.qtd_estoque -= qtd_produto
+                    else:
+                        return Response(status=status.HTTP_400_BAD_REQUEST)
+                    
+                    if produto.qtd_estoque < 1:
+                        produto.ativo = False
+
+                    try:
+                        produto.save()
+                        valor_total += item.subtotal()
+                        item.save()
+                    except:
+                        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+            try:     
+                venda.valor_total = valor_total
+                venda.save()
+                return Response(status=status.HTTP_201_CREATED)
+            except:
+                return Response(status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        
 
 
 
