@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-from .serializers import ProdutoSerializer
+from .serializers import ProdutoSerializer, UsuarioSerializer
 from .models import Produto, Venda, ItemVenda
 
 @api_view(['GET', 'POST', 'PUT', 'DELETE'])
@@ -113,7 +113,25 @@ def comprar_produtos(request):
                 return Response(status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response(status=status.HTTP_204_NO_CONTENT)
-        
 
+@api_view(['POST'])
+def usuarios(request):
+    if request.method == 'POST':
+        try:
+            usuario = request.data
+        except:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        if usuario:
+            serializer = UsuarioSerializer(data=usuario)
+
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        else:
+            return Response(status=status.HTTP_204_NO_CONTENT)
 
 

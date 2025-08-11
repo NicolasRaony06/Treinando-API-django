@@ -45,7 +45,21 @@ def comprar_post_method():
 
     print(request.status_code)
 
-comprar_post_method()
+#comprar_post_method()
+
+link3 = "http://127.0.0.1:8000/api/usuarios/"
+
+def usuarios_post_method():
+    request = requests.post(url=link3, json={
+        "username": "nicolas",
+        "email": "nicolas@gmail.com",
+        "password": "nicolas123"
+        }   
+        )
+
+    print(request.status_code)
+
+usuarios_post_method()
 
 
 
