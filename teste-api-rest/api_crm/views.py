@@ -1,12 +1,14 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
 from .serializers import ProdutoSerializer, UsuarioSerializer
 from .models import Produto, Venda, ItemVenda
 
 @api_view(['GET', 'POST', 'PUT', 'DELETE'])
+@permission_classes([IsAuthenticated])
 def produtos_api(request):
     if request.method == "GET":
         produtos = Produto.objects.all()
@@ -59,6 +61,7 @@ def produtos_api(request):
             return Response(status=status.HTTP_404_NOT_FOUND)
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def comprar_produtos(request):
     if request.method == 'POST':
         try:
