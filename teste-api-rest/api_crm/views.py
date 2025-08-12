@@ -116,22 +116,15 @@ def comprar_produtos(request):
 
 @api_view(['POST'])
 def usuarios(request):
-    if request.method == 'POST':
-        try:
-            usuario = request.data
-        except:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+    if not request.data:
+        return Response({"erro": "Nenhum dado enviado"}, status=status.HTTP_400_BAD_REQUEST)
+    
+    serializer = UsuarioSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        if usuario:
-            serializer = UsuarioSerializer(data=usuario)
-
-            if serializer.is_valid():
-                serializer.save()
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
-            
-            return Response(status=status.HTTP_400_BAD_REQUEST)
-
-        else:
-            return Response(status=status.HTTP_204_NO_CONTENT)
 
 
