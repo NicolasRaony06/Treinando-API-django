@@ -1,11 +1,24 @@
 from rest_framework import serializers
-from .models import Produto
+from .models import Produto, ItemVenda
 from django.contrib.auth.models import User
 
 class ProdutoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Produto
         fields = '__all__'
+
+class ProdutoFaturamentoSerializer(serializers.ModelSerializer):
+    faturamento = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Produto
+        fields = ['id', 'nome', 'qtd_estoque', 'faturamento']
+
+    def get_faturamento(self, obj):
+        valor_total = 0
+        for item in ItemVenda.objects.filter(produto=obj):
+            valor_total += item.subtotal()
+        return valor_total
 
 class UsuarioSerializer(serializers.ModelSerializer):
     class Meta:
