@@ -1,22 +1,18 @@
 import requests
 
-token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU1MDA1MTI2LCJpYXQiOjE3NTUwMDQ4MjYsImp0aSI6Ijk2YWIyYzIwOGI0NTQ0ZDc4YzYwMDVhMWIxNjU5NTY3IiwidXNlcl9pZCI6IjUifQ.cBn38IG4TWJ6LiFMeksWoSflZxAuewHvUKBe3RNPX0s"
-
-token_refresh = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc1NTA5MDc4OCwiaWF0IjoxNzU1MDA0Mzg4LCJqdGkiOiIyMzQ2ZTlhZTk2YTM0MzkzYWM4M2Y0ODg5OTg0OWEzYyIsInVzZXJfaWQiOiI1In0.Mpf0ltrKTNyZR9ARiViEf7m_s3N6-xIWIWRjSzAAwiM'
-
 link = "http://127.0.0.1:8000/api/produtos/"
 
 def produtos_get_method():
     request = requests.get(
         url=link,
         headers=
-        {'Authorization': f'Bearer {token}'}
+        {'Authorization': f'Bearer'}
     )
 
     print(request.json())
     print(request.status_code)
 
-produtos_get_method()
+#produtos_get_method()
 
 def produtos_put_method():
     request = requests.put(url=link, json={
@@ -52,7 +48,7 @@ def comprar_post_method():
             "quantidade": [2],
         },
         headers={
-            'Authorization': f'Bearer {token}'
+            'Authorization': f'Bearer'
         }
     )
 
@@ -74,24 +70,30 @@ def usuarios_post_method():
 
 #usuarios_post_method()
 
-link4 = "http://127.0.0.1:8000/api/usuarios/login/"
+link = "http://127.0.0.1:8000/api/usuarios/login/"
 
 def login_post_method():
-    request = requests.post(url=link4, json={
+    request = requests.post(url=link, json={
         "username": "raony",
         "password": "raony12345"
         }   
         )
 
+    token = request.json()['access']
+    refresh_token = request.json()['refresh']
+
     print(request.status_code)
     print(request.json())
 
-#login_post_method()
+    return token, refresh_token
 
-link5 = "http://127.0.0.1:8000/api/usuarios/refresh/"
+token = login_post_method()[0]
+token_refresh = login_post_method()[1]
+
+link = "http://127.0.0.1:8000/api/usuarios/refresh/"
 
 def refreshtoken_post_method():
-    request = requests.post(url=link5, json={
+    request = requests.post(url=link, json={
         "refresh": token_refresh,
         }   
         )
@@ -101,14 +103,17 @@ def refreshtoken_post_method():
 
 #refreshtoken_post_method()
 
-link5 = "http://127.0.0.1:8000/api/dashboard/produtos/"
+link = "http://127.0.0.1:8000/api/dashboard/produtos/"
 
 def dashboardprodutos_get_method():
-    request = requests.post(url=link5, json={
-        "refresh": token_refresh,
-        }   
+    request = requests.get(
+        url=link,
+        headers={
+            'Authorization': f'Bearer {token}'
+        }
         )
 
     print(request.status_code)
     print(request.json())
 
+dashboardprodutos_get_method()

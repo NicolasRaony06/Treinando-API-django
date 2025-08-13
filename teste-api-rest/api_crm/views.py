@@ -117,7 +117,8 @@ def comprar_produtos(request):
         else:
             return Response(status=status.HTTP_204_NO_CONTENT)
 
-@api_view(['GET'])        
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])        
 def dashboard_produtos(request):
     produtos = Produto.objects.all()
     serializer = ProdutoFaturamentoSerializer(produtos, many=True)
