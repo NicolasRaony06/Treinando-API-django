@@ -4,7 +4,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
-from .serializers import ProdutoSerializer, UsuarioSerializer
+from .serializers import ProdutoSerializer, UsuarioSerializer, ProdutoFaturamentoSerializer
 from .models import Produto, Venda, ItemVenda
 
 @api_view(['GET', 'POST', 'PUT', 'DELETE'])
@@ -116,6 +116,17 @@ def comprar_produtos(request):
                 return Response(status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response(status=status.HTTP_204_NO_CONTENT)
+
+@api_view(['GET'])        
+def dashboard_produtos(request):
+    produtos = Produto.objects.all()
+    serializer = ProdutoFaturamentoSerializer(produtos, many=True)
+
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+@api_view(['GET'])        
+def dashboard_faturamento(request):
+    pass
 
 @api_view(['POST'])
 def usuarios(request):

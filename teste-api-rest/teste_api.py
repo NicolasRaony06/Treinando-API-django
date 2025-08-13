@@ -101,3 +101,14 @@ def refreshtoken_post_method():
 
 #refreshtoken_post_method()
 
+link5 = "http://127.0.0.1:8000/api/dashboard/produtos/"
+
+def dashboardprodutos_get_method():
+    request = requests.post(url=link5, json={
+        "refresh": token_refresh,
+        }   
+        )
+
+    print(request.status_code)
+    print(request.json())
+

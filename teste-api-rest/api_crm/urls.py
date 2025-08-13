@@ -8,4 +8,6 @@ urlpatterns = [
     path('usuarios/', views.usuarios, name="usuarios"),
     path('usuarios/login/', TokenObtainPairView.as_view(), name="obter_token_login"),
     path('usuarios/refresh/', TokenRefreshView.as_view(), name="refresh_token_login"),
+    path('dashboard/produtos/', views.dashboard_produtos, name="dashboard_produtos"),
+    path('dashboard/faturamento/', views.dashboard_faturamento, name="dashboard_faturamento"),
 ]
