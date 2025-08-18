@@ -127,7 +127,11 @@ def dashboard_produtos(request):
 
 @api_view(['GET'])        
 def dashboard_faturamento(request):
-    pass
+    faturamento = 0
+    for venda in Venda.objects.all():
+        faturamento += venda.valor_total
+
+    return Response({"faturamento": faturamento}, status=status.HTTP_200_OK)
 
 @api_view(['POST'])
 def usuarios(request):
