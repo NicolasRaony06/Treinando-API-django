@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from rest_framework import status
 from .serializers import ProdutoSerializer, UsuarioSerializer, ProdutoFaturamentoSerializer
@@ -118,7 +118,7 @@ def comprar_produtos(request):
             return Response(status=status.HTTP_204_NO_CONTENT)
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])        
+@permission_classes([IsAdminUser])        
 def dashboard_produtos(request):
     produtos = Produto.objects.all()
     serializer = ProdutoFaturamentoSerializer(produtos, many=True)
@@ -126,7 +126,7 @@ def dashboard_produtos(request):
     return Response(serializer.data, status=status.HTTP_200_OK)
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])        
+@permission_classes([IsAdminUser])        
 def dashboard_faturamento(request):
     faturamento = 0
     for venda in Venda.objects.all():
