@@ -116,4 +116,19 @@ def dashboardprodutos_get_method():
     print(request.status_code)
     print(request.json())
 
-dashboardprodutos_get_method()
+#dashboardprodutos_get_method()
+
+link = "http://127.0.0.1:8000/api/dashboard/faturamento/"
+
+def dashboardfaturamento_get_method():
+    request = requests.get(
+        url=link,
+        headers={
+            'Authorization': f'Bearer {token}'
+        }
+        )
+
+    print(request.status_code)
+    print(request.json())
+
+dashboardfaturamento_get_method()

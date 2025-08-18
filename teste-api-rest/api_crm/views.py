@@ -125,7 +125,8 @@ def dashboard_produtos(request):
 
     return Response(serializer.data, status=status.HTTP_200_OK)
 
-@api_view(['GET'])        
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])        
 def dashboard_faturamento(request):
     faturamento = 0
     for venda in Venda.objects.all():
